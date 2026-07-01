@@ -1,0 +1,39 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.dll
+*.pdb
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+
+# Angular
+node_modules/
+dist/
+.angular/
+
+# Environment
+.env
+.env.*
+
+# Docker
+*.log
+
+# OS
+.DS_Store
+
+# Certificates
+*.pfx
+*.pem
+
+# Test
+TestResults/
+
+# Coverage
+coverage/
