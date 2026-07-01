@@ -1,3 +1,4 @@
+using EmployeeHub.Application.Employees.DTOs;
 using EmployeeHub.Application.Employees.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,5 +34,25 @@ public class EmployeesController : ControllerBase
             return NotFound();
 
         return Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(CreateEmployeeDto dto)
+    {
+        var result =
+            await _service.CreateAsync(dto);
+
+        return CreatedAtAction(
+            nameof(Get),
+            new { id = result.Id },
+            result);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        await _service.DeleteAsync(id);
+
+        return NoContent();
     }
 }

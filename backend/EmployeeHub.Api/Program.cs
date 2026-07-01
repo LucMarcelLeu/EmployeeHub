@@ -26,8 +26,16 @@ builder.Services.AddHealthChecks();
 
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
-
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var context =
+        scope.ServiceProvider
+        .GetRequiredService<EmployeeHubDbContext>();
+
+    await DbInitializer.InitializeAsync(context);
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
