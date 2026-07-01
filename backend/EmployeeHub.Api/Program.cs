@@ -1,6 +1,8 @@
 using Serilog;
 using EmployeeHub.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using EmployeeHub.Application.Employees.Interfaces;
+using EmployeeHub.Infrastructure.Employees;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
+
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
