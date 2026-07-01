@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="EmployeeHub.Api/EmployeeHub.Api.csproj" />
+  <Project Path="EmployeeHub.Application/EmployeeHub.Application.csproj" />
+  <Project Path="EmployeeHub.Domain/EmployeeHub.Domain.csproj" />
+  <Project Path="EmployeeHub.Infrastructure/EmployeeHub.Infrastructure.csproj" />
+  <Project Path="EmployeeHub.Tests/EmployeeHub.Tests.csproj" />
+</Solution>
