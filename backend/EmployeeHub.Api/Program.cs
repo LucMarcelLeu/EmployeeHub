@@ -1,6 +1,14 @@
 using Serilog;
+using EmployeeHub.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<EmployeeHubDbContext>(
+    options =>
+        options.UseSqlServer(
+            builder.Configuration
+            .GetConnectionString("DefaultConnection")));
 
 builder.Host.UseSerilog((context, configuration) =>
 {
