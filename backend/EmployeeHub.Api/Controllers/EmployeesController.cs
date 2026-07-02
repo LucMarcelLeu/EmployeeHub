@@ -16,43 +16,34 @@ public class EmployeesController : ControllerBase
         _service = service;
     }
 
-
     [HttpGet]
-    public async Task<IActionResult> Get()
-    {
-        return Ok(
-            await _service.GetAllAsync());
-    }
+    public async Task<IActionResult> GetAll()
+        => Ok(await _service.GetAllAsync());
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(Guid id)
+    public async Task<IActionResult> GetById(Guid id)
     {
-        var result =
-            await _service.GetByIdAsync(id);
-
-        if (result == null)
-            return NotFound();
-
-        return Ok(result);
+        var result = await _service.GetByIdAsync(id);
+        return result == null ? NotFound() : Ok(result);
     }
 
     [HttpPost]
     public async Task<IActionResult> Create(CreateEmployeeDto dto)
     {
-        var result =
-            await _service.CreateAsync(dto);
-
-        return CreatedAtAction(
-            nameof(Get),
-            new { id = result.Id },
-            result);
+        var result = await _service.CreateAsync(dto);
+        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+    }
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(Guid id, UpdateEmployeeDto dto)
+    {
+        var result = await _service.UpdateAsync(id, dto);
+        return result == null ? NotFound() : Ok(result);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        await _service.DeleteAsync(id);
-
-        return NoContent();
+        var ok = await _service.DeleteAsync(id);
+        return ok ? NoContent() : NotFound();
     }
 }

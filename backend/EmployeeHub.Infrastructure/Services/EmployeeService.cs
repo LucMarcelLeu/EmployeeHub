@@ -1,51 +1,109 @@
 using EmployeeHub.Application.Employees.DTOs;
 using EmployeeHub.Application.Employees.Interfaces;
+using EmployeeHub.Domain.Entities;
 using EmployeeHub.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace EmployeeHub.Infrastructure.Employees;
-
 
 public class EmployeeService : IEmployeeService
 {
     private readonly EmployeeHubDbContext _context;
-
 
     public EmployeeService(EmployeeHubDbContext context)
     {
         _context = context;
     }
 
-
     public async Task<IEnumerable<EmployeeDto>> GetAllAsync()
     {
         return await _context.Employees
-            .Select(e => new EmployeeDto
+            .Include(x => x.Department)
+            .AsNoTracking()
+            .Select(x => new EmployeeDto
             {
-                Id = e.Id,
-                FirstName = e.FirstName,
-                LastName = e.LastName,
-                Email = e.Email,
-                Department = e.Department != null
-                    ? e.Department.Name
-                    : null
+                Id = x.Id,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                Email = x.Email,
+                Department = x.Department != null ? x.Department.Name : null
             })
             .ToListAsync();
     }
 
-
     public async Task<EmployeeDto?> GetByIdAsync(Guid id)
     {
         return await _context.Employees
-            .Where(e => e.Id == id)
-            .Select(e => new EmployeeDto
+            .Include(x => x.Department)
+            .AsNoTracking()
+            .Where(x => x.Id == id)
+            .Select(x => new EmployeeDto
             {
-                Id = e.Id,
-                FirstName = e.FirstName,
-                LastName = e.LastName,
-                Email = e.Email
+                Id = x.Id,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                Email = x.Email,
+                Department = x.Department != null ? x.Department.Name : null
             })
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<EmployeeDto> CreateAsync(CreateEmployeeDto dto)
+    {
+        var employee = new Employee
+        {
+            Id = Guid.NewGuid(),
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            Email = dto.Email,
+            DepartmentId = dto.DepartmentId
+        };
+
+        _context.Employees.Add(employee);
+        await _context.SaveChangesAsync();
+
+        return (await GetByIdAsync(employee.Id))!;
+    }
+
+    public async Task<EmployeeDto?> UpdateAsync(Guid id, UpdateEmployeeDto dto)
+    {
+        var employee = await _context.Employees.FindAsync(id);
+
+        if (employee == null)
+            return null;
+
+        employee.FirstName = dto.FirstName;
+        employee.LastName = dto.LastName;
+        employee.Email = dto.Email;
+        employee.DepartmentId = dto.DepartmentId;
+
+        await _context.SaveChangesAsync();
+
+        return await GetByIdAsync(id);
+    }
+
+    public async Task<bool> DeleteAsync(Guid id)
+    {
+        var employee = await _context.Employees.FindAsync(id);
+
+        if (employee == null)
+            return false;
+
+        _context.Employees.Remove(employee);
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
+    private static EmployeeDto Map(Employee x)
+    {
+        return new EmployeeDto
+        {
+            Id = x.Id,
+            FirstName = x.FirstName,
+            LastName = x.LastName,
+            Email = x.Email,
+            Department = x.Department != null ? x.Department.Name : null
+        };
     }
 }
