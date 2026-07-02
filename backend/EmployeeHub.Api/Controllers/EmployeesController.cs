@@ -1,9 +1,11 @@
 using EmployeeHub.Application.Employees.DTOs;
 using EmployeeHub.Application.Employees.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeHub.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class EmployeesController : ControllerBase
