@@ -1,0 +1,10 @@
+.center {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.error {
+    color: red;
+    margin: 20px 0;
+}

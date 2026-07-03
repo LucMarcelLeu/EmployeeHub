@@ -1,0 +1,31 @@
+<div class="layout">
+
+    <!-- TOP BAR -->
+    <header class="toolbar">
+        <div class="logo">EmployeeHub</div>
+
+        <div class="spacer"></div>
+
+        <div class="user">
+            👤 {{ username }}
+            <button (click)="logout()">⏻ Logout</button>
+        </div>
+    </header>
+
+    <!-- BODY -->
+    <div class="body">
+
+        <!-- SIDEBAR -->
+        <nav class="sidebar">
+            <a routerLink="/dashboard">Dashboard</a>
+            <a routerLink="/employees">Employees</a>
+            <a routerLink="/departments">Departments</a>
+        </nav>
+
+        <!-- CONTENT -->
+        <main class="content">
+            <router-outlet></router-outlet>
+        </main>
+
+    </div>
+</div>

@@ -51,6 +51,18 @@ builder.Services.AddHealthChecks();
 
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -98,6 +110,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseRouting();
+
+app.UseCors("AllowAngular");
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapHealthChecks("/health");

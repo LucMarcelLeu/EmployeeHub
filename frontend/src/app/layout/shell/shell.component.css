@@ -1,0 +1,43 @@
+.layout {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+}
+
+.toolbar {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    background: #1976d2;
+    color: white;
+}
+
+.spacer {
+    flex: 1;
+}
+
+.body {
+    flex: 1;
+    display: flex;
+}
+
+.sidebar {
+    width: 200px;
+    background: #f4f4f4;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: black;
+}
+
+.content {
+    flex: 1;
+    padding: 16px;
+}
