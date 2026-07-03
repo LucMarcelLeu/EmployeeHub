@@ -4,6 +4,7 @@ import { EmployeeService } from './employee.service';
 import { Employee } from './employee.model';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-employees',
@@ -13,6 +14,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     styleUrl: './employees.component.css'
 })
 export class EmployeesComponent implements OnInit {
+
+    private router = inject(Router);
 
     private service = inject(EmployeeService);
 
@@ -40,5 +43,9 @@ export class EmployeesComponent implements OnInit {
                 this.loading = false;
             }
         });
+    }
+
+    openDetail(emp: Employee) {
+        this.router.navigate(['/employees', emp.id]);
     }
 }

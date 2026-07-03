@@ -1,0 +1,14 @@
+<div *ngIf="loading">
+    Loading...
+</div>
+
+<div *ngIf="employee">
+
+    <h2>{{ employee.firstName }} {{ employee.lastName }}</h2>
+
+    <p><b>ID:</b> {{ employee.id }}</p>
+    <p><b>Email:</b> {{ employee.email }}</p>
+
+    <p><b>Department:</b> {{ employee.department }}</p>
+
+</div>
