@@ -1,32 +1,78 @@
 # EmployeeHub
 
-EmployeeHub is a modern full-stack employee management application.
+Fullstack Employee Management System built with **Angular**, **.NET 8/9+**, **Keycloak Authentication**, and **SQL Server**.
 
-## Tech Stack
+---
 
-Backend:
-- ASP.NET Core 10
-- Entity Framework Core
-- SQL Server
+## 🚀 Overview
 
-Frontend:
-- Angular
+EmployeeHub is a modern fullstack web application for managing employees in an organization.  
+It demonstrates authentication, authorization, CRUD operations, and a clean layered architecture.
+
+---
+
+## 🧱 Tech Stack
+
+### Frontend
+- Angular 20+
+- Angular Material
+- Keycloak Angular
+- RxJS
 - TypeScript
 
-Security:
-- Keycloak
-- OpenID Connect
-- JWT
+### Backend
+- .NET (ASP.NET Core Web API)
+- Entity Framework Core
+- SQL Server
+- JWT Authentication (Keycloak)
 
-Infrastructure:
-- Docker
-- Docker Compose
-- nginx
+### Infrastructure
+- Keycloak (Identity & Access Management)
+- Docker (optional for DB / Keycloak)
+- GitHub for version control
 
-CI/CD:
-- GitHub Actions
+---
 
+## 🔐 Authentication
 
-## Status
+Authentication is handled via **Keycloak (OpenID Connect / OAuth2)**.
 
-🚧 Development
+- Login via Keycloak
+- JWT token stored in frontend
+- HTTP Interceptor attaches Bearer token
+- Backend validates token via JWT Bearer middleware
+
+---
+
+## 📦 Features (Current State)
+
+### ✅ Implemented
+- Keycloak Login / Logout
+- Angular Shell Layout (Toolbar + Sidebar)
+- Employee List (Material Table)
+- Secure API communication
+- JWT Authentication
+- CORS configuration
+- Loading & Error handling
+
+### 🚧 Planned
+- Employee Detail View
+- Create / Edit / Delete Employees
+- Role-based access control (Admin/User)
+- Search & Filtering
+- Pagination
+
+---
+
+## 🏗 Architecture
+
+```text
+Angular (SPA)
+   ↓
+Keycloak (Auth Server)
+   ↓
+JWT Token
+   ↓
+ASP.NET Core API
+   ↓
+SQL Server
