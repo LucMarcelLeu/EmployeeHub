@@ -4,9 +4,10 @@ namespace EmployeeHub.Application.Employees.Interfaces;
 
 public interface IEmployeeService
 {
-    Task<IEnumerable<EmployeeDto>> GetAllAsync();
+    Task<IEnumerable<EmployeeDto>> GetAllAsync(string? search = null);
 
     Task<EmployeeDto?> GetByIdAsync(Guid id);
+
 
     Task<EmployeeDto> CreateAsync(CreateEmployeeDto dto);
 

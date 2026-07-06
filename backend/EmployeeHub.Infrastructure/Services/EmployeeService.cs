@@ -15,9 +15,19 @@ public class EmployeeService : IEmployeeService
         _context = context;
     }
 
-    public async Task<IEnumerable<EmployeeDto>> GetAllAsync()
+    public async Task<IEnumerable<EmployeeDto>> GetAllAsync(string? search = null)
     {
-        return await _context.Employees
+        var query = _context.Employees.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(e =>
+                e.FirstName.Contains(search) ||
+                e.LastName.Contains(search) ||
+                e.Email.Contains(search));
+        }
+
+        return await query
             .Include(x => x.Department)
             .AsNoTracking()
             .Select(x => new EmployeeDto

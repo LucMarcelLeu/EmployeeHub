@@ -18,15 +18,21 @@ export class EmployeeService {
         return this.http.get<Employee>(`${this.baseUrl}/${id}`);
     }
 
-    create(emp: Employee): Observable<Employee> {
-        return this.http.post<Employee>(this.baseUrl, emp);
+    create(employee: Partial<Employee>) {
+        return this.http.post<Employee>(this.baseUrl, employee);
     }
 
-    update(id: string, emp: Employee): Observable<void> {
-        return this.http.put<void>(`${this.baseUrl}/${id}`, emp);
+    update(id: string, employee: Partial<Employee>) {
+        return this.http.put<Employee>(`${this.baseUrl}/${id}`, employee);
     }
 
-    delete(id: string): Observable<void> {
-        return this.http.delete<void>(`${this.baseUrl}/${id}`);
+    delete(id: string) {
+        return this.http.delete(`${this.baseUrl}/${id}`);
+    }
+
+    search(term: string) {
+        return this.http.get<Employee[]>(
+            `${this.baseUrl}?search=${term}`
+        );
     }
 }

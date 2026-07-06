@@ -1,0 +1,15 @@
+<h2>{{ isEditMode ? 'Edit Employee' : 'Create Employee' }}</h2>
+
+<form [formGroup]="form">
+
+    <input placeholder="First Name" formControlName="firstName">
+    <input placeholder="Last Name" formControlName="lastName">
+    <input placeholder="Email" formControlName="email">
+
+</form>
+
+<button (click)="save()">
+    {{ isEditMode ? 'Update' : 'Create' }}
+</button>
+
+<button (click)="close()">Cancel</button>
