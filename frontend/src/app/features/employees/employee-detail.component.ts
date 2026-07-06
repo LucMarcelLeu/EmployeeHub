@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { EmployeeService } from './employee.service';
-import { Employee } from './employee.model';
+import { Employee } from '../../shared/models/employee.model';
 
 @Component({
     selector: 'app-employee-detail',
@@ -21,7 +21,7 @@ export class EmployeeDetailComponent implements OnInit {
 
     ngOnInit(): void {
         const id = this.route.snapshot.paramMap.get('id');
-        
+
         if (!id) {
             console.error('No employee id in route');
             return;

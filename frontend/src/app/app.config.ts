@@ -5,12 +5,15 @@ import { authInterceptor } from './core/auth/auth.interceptor';
 
 import { routes } from './app.routes';
 
+import { environment } from '../environments/environment';
+
 import {
   provideKeycloak,
   withAutoRefreshToken,
   AutoRefreshTokenService,
   UserActivityService
 } from 'keycloak-angular';
+import { AppConstants } from './core/config/app.constants';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,9 +25,9 @@ export const appConfig: ApplicationConfig = {
 
     provideKeycloak({
       config: {
-        url: 'http://localhost:8080',
-        realm: 'employeehub',
-        clientId: 'employeehub-api'
+        url: environment.keycloak.url,
+        realm: environment.keycloak.realm,
+        clientId: environment.keycloak.clientId
       },
 
       initOptions: {
@@ -36,7 +39,7 @@ export const appConfig: ApplicationConfig = {
       features: [
         withAutoRefreshToken({
           onInactivityTimeout: 'logout',
-          sessionTimeout: 30 * 60 * 1000
+          sessionTimeout: AppConstants.sessionTimeout
         })
       ]
     }),
