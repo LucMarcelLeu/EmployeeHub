@@ -2,6 +2,8 @@ import { Component, inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field'
+import { MatInputModule } from '@angular/material/input';
 import { EmployeeService } from './employee.service';
 import { Employee } from '../../shared/models/employee.model';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -11,8 +13,13 @@ import { NotificationService } from '../../core/services/notification.service';
 @Component({
     selector: 'app-employee-form',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
-    templateUrl:'./employee-form.component.html'
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule],
+    templateUrl: './employee-form.component.html',
+    styleUrl: './employee-form.component.css'
 })
 export class EmployeeFormComponent implements OnInit {
 

@@ -9,9 +9,9 @@ import { EmployeeService } from './core/api/employee.service';
     <button (click)="load()">Load Employees</button>
 
     <ul>
-      <li *ngFor="let e of employees">
-        {{e.firstName}} {{e.lastName}} - {{e.email}}
-      </li>
+      @for (employee of employees; track employee.id) {
+        {{employee.firstName}} {{employee.lastName}} - {{employee.email}}
+      }
     </ul>
   `
 })

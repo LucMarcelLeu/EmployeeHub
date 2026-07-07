@@ -5,8 +5,7 @@ namespace EmployeeHub.Infrastructure.Persistence;
 
 public static class DbInitializer
 {
-    public static async Task InitializeAsync(
-        EmployeeHubDbContext context)
+    public static async Task InitializeAsync(EmployeeHubDbContext context)
     {
         await context.Database.MigrateAsync();
 

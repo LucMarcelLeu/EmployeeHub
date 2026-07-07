@@ -9,7 +9,6 @@ namespace EmployeeHub.Infrastructure.Employees;
 public class EmployeeService : IEmployeeService
 {
     private readonly EmployeeHubDbContext _context;
-
     public EmployeeService(EmployeeHubDbContext context)
     {
         _context = context;

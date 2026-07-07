@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import Keycloak from 'keycloak-js';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-    constructor(private keycloak: Keycloak) { }
+    private keycloak = inject(Keycloak);
 
     isLoggedIn(): boolean {
         return this.keycloak.authenticated ?? false;
@@ -22,5 +22,13 @@ export class AuthService {
         this.keycloak.logout({
             redirectUri: window.location.origin
         });
+    }
+
+    hasRole(role: string): boolean {
+        return this.keycloak.hasRealmRole(role);
+    }
+
+    get isAdmin(): boolean {
+        return this.hasRole('admin');
     }
 }

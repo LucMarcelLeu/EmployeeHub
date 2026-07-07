@@ -30,12 +30,14 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPost]
+    // [Authorize(Roles = "admin")]
     public async Task<IActionResult> Create(CreateEmployeeDto dto)
     {
         var result = await _service.CreateAsync(dto);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
     [HttpPut("{id}")]
+    // [Authorize(Roles = "admin")]
     public async Task<IActionResult> Update(Guid id, UpdateEmployeeDto dto)
     {
         var result = await _service.UpdateAsync(id, dto);
@@ -43,6 +45,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    // [Authorize(Roles = "admin")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var ok = await _service.DeleteAsync(id);

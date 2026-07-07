@@ -1,8 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { EmployeeService } from './employee.service';
 import { Employee } from '../../shared/models/employee.model';
 import { MatTableModule } from '@angular/material/table';
@@ -13,6 +15,13 @@ import { EmployeeFormComponent } from './employee-form.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ConfirmDeleteDialog } from '../../shared/ConfirmDeleteDialog';
 import { NotificationService } from '../../core/services/notification.service';
+import { AuthService } from '../../core/auth/auth.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { ViewChild } from '@angular/core';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
     selector: 'app-employees',
@@ -20,25 +29,31 @@ import { NotificationService } from '../../core/services/notification.service';
     imports: [
         CommonModule,
         MatTableModule,
+        MatSortModule,
+        MatPaginatorModule,
         MatFormFieldModule,
         MatInputModule,
         MatButtonModule, 
         MatSnackBarModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatIconModule
     ],
     templateUrl: './employees.component.html',
     styleUrl: './employees.component.css'
 })
 
-export class EmployeesComponent implements OnInit {
+export class EmployeesComponent implements OnInit, AfterViewInit {
 
     private router = inject(Router);
     private dialog = inject(MatDialog);
 
     private service = inject(EmployeeService);
     private notification = inject(NotificationService);
+    
+    private auth = inject(AuthService);
+    isAdmin = this.auth.isAdmin;
 
-    employees: Employee[] = [];
+    dataSource = new MatTableDataSource<Employee>();
     loading = false;
     error = '';
 
@@ -50,6 +65,12 @@ export class EmployeesComponent implements OnInit {
         'actions'
     ];
 
+    @ViewChild(MatSort)
+    sort!: MatSort;
+
+    @ViewChild(MatPaginator)
+    paginator!: MatPaginator;
+
     ngOnInit(): void {
         this.load();
     }
@@ -58,16 +79,24 @@ export class EmployeesComponent implements OnInit {
         this.loading = true;
         this.error = '';
 
-        this.service.getAll().subscribe({
-            next: data => {
-                this.employees = data;
-                this.loading = false;
-            },
-            error: err => {
-                this.error = 'Fehler beim Laden der Daten';
-                this.loading = false;
-            }
-        });
+        this.service.getAll()
+            .subscribe(data => {
+
+                this.dataSource.data = data;
+
+                this.dataSource.sort = this.sort;
+
+                this.dataSource.paginator = this.paginator;
+
+            });
+    }
+
+    ngAfterViewInit(): void {
+
+        this.dataSource.sort = this.sort;
+
+        this.dataSource.paginator = this.paginator;
+
     }
 
     openDetail(emp: Employee) {
@@ -76,7 +105,9 @@ export class EmployeesComponent implements OnInit {
 
     openCreate() {
         const ref = this.dialog.open(EmployeeFormComponent, {
-            width: '500px'
+            width: '500px',
+            maxWidth: '90vw',
+            autoFocus: false
         });
 
         ref.afterClosed().subscribe(result => {
@@ -110,27 +141,13 @@ export class EmployeesComponent implements OnInit {
             });
 
         });
-
     }
-    // delete(emp: Employee) {
-
-    //     const confirmed = confirm(`Delete ${emp.firstName}?`);
-
-    //     if (!confirmed) return;
-
-    //     this.service.delete(emp.id).subscribe(() => {
-    //         this.load();
-    //     });
-
-    // }
 
     onSearch(event: Event) {
+        const value =
+            (event.target as HTMLInputElement).value;
 
-        const value = (event.target as HTMLInputElement).value;
-
-        this.service.search(value).subscribe(data => {
-            this.employees = data;
-        });
-
+        this.dataSource.filter =
+            value.trim().toLowerCase();
     }
 }

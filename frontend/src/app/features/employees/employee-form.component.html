@@ -1,15 +1,38 @@
-<h2>{{ isEditMode ? 'Edit Employee' : 'Create Employee' }}</h2>
+<div class="dialog-container">
 
-<form [formGroup]="form">
+    <h2 class="dialog-title">
+        {{ isEditMode ? 'Edit Employee' : 'New Employee' }}
+    </h2>
 
-    <input placeholder="First Name" formControlName="firstName">
-    <input placeholder="Last Name" formControlName="lastName">
-    <input placeholder="Email" formControlName="email">
+    <form [formGroup]="form" class="dialog-form">
 
-</form>
+        <mat-form-field appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName">
+        </mat-form-field>
 
-<button (click)="save()">
-    {{ isEditMode ? 'Update' : 'Create' }}
-</button>
+        <mat-form-field appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName">
+        </mat-form-field>
 
-<button (click)="close()">Cancel</button>
+        <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email">
+        </mat-form-field>
+
+    </form>
+
+    <div class="dialog-actions">
+
+        <button mat-button (click)="cancel()">
+            Cancel
+        </button>
+
+        <button mat-raised-button color="primary" (click)="save()">
+            {{ isEditMode ? 'Update' : 'Create' }}
+        </button>
+
+    </div>
+
+</div>
