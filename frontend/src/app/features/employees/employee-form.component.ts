@@ -3,12 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field'
+import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
-import { EmployeeService } from './employee.service';
+import { EmployeeService } from './services/employee.service';
 import { Employee } from '../../shared/models/employee.model';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Inject } from '@angular/core';
 import { NotificationService } from '../../core/services/notification.service';
+import { Department } from '../departments/models/department';
+import { DepartmentService } from '../departments/services/department.service';
 
 @Component({
     selector: 'app-employee-form',
@@ -17,6 +19,7 @@ import { NotificationService } from '../../core/services/notification.service';
         CommonModule,
         ReactiveFormsModule,
         MatFormFieldModule,
+        MatSelectModule,
         MatInputModule],
     templateUrl: './employee-form.component.html',
     styleUrl: './employee-form.component.css'
@@ -25,20 +28,28 @@ export class EmployeeFormComponent implements OnInit {
 
     private fb = inject(FormBuilder);
     private service = inject(EmployeeService);
+    private departmentService = inject(DepartmentService);
     private notification = inject(NotificationService);
     private dialogRef = inject(MatDialogRef<EmployeeFormComponent>);
 
     readonly employee = inject(MAT_DIALOG_DATA) as Employee | null;
 
     isEditMode = false;
+    departments: Department[] = [];
 
     readonly form = this.fb.nonNullable.group({
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]]
+        email: ['', [Validators.required, Validators.email]],
+        departmentId: this.fb.control<string | null>(null)
     });
 
     ngOnInit(): void {
+
+        this.departmentService.getAll().subscribe({
+            next: departments => this.departments = departments
+        });
+
         if (!this.employee) {
             return;
         }
@@ -47,7 +58,8 @@ export class EmployeeFormComponent implements OnInit {
         this.form.patchValue({
             firstName: this.employee.firstName,
             lastName: this.employee.lastName,
-            email: this.employee.email
+            email: this.employee.email,
+            departmentId: this.employee.departmentId ?? null
         });
     }
 

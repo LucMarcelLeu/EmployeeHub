@@ -1,5 +1,5 @@
 ﻿using EmployeeHub.Application.Employees.DTOs;
-using EmployeeHub.Infrastructure.Employees;
+using EmployeeHub.Infrastructure.Services;
 using EmployeeHub.Tests.Helpers;
 using FluentAssertions;
 

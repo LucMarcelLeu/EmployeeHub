@@ -4,7 +4,7 @@ using EmployeeHub.Domain.Entities;
 using EmployeeHub.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace EmployeeHub.Infrastructure.Employees;
+namespace EmployeeHub.Infrastructure.Services;
 
 public class EmployeeService : IEmployeeService
 {
@@ -35,6 +35,7 @@ public class EmployeeService : IEmployeeService
                 FirstName = x.FirstName,
                 LastName = x.LastName,
                 Email = x.Email,
+                DepartmentId = x.DepartmentId,
                 Department = x.Department != null ? x.Department.Name : null
             })
             .ToListAsync();
@@ -52,6 +53,7 @@ public class EmployeeService : IEmployeeService
                 FirstName = x.FirstName,
                 LastName = x.LastName,
                 Email = x.Email,
+                DepartmentId = x.DepartmentId,
                 Department = x.Department != null ? x.Department.Name : null
             })
             .FirstOrDefaultAsync();

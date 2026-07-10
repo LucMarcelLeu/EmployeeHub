@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { EmployeeService } from './employee.service';
+import { EmployeeService } from './services/employee.service';
 import { Employee } from '../../shared/models/employee.model';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -33,7 +33,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
         MatPaginatorModule,
         MatFormFieldModule,
         MatInputModule,
-        MatButtonModule, 
+        MatButtonModule,
         MatSnackBarModule,
         MatProgressSpinnerModule,
         MatIconModule
@@ -49,7 +49,7 @@ export class EmployeesComponent implements OnInit, AfterViewInit {
 
     private service = inject(EmployeeService);
     private notification = inject(NotificationService);
-    
+
     private auth = inject(AuthService);
     isAdmin = this.auth.isAdmin;
 

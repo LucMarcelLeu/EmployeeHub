@@ -2,13 +2,14 @@ using Serilog;
 using EmployeeHub.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using EmployeeHub.Application.Employees.Interfaces;
-using EmployeeHub.Infrastructure.Employees;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.OpenApi;
 using Microsoft.AspNetCore.Authentication;
 using EmployeeHub.Api.Security;
+using EmployeeHub.Application.Departments.Interfaces;
+using EmployeeHub.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +53,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddHealthChecks();
 
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 
 builder.Services.AddCors(options =>
 {
@@ -123,7 +125,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 
 app.UseRouting();
 
