@@ -10,14 +10,24 @@ using Microsoft.AspNetCore.Authentication;
 using EmployeeHub.Api.Security;
 using EmployeeHub.Application.Departments.Interfaces;
 using EmployeeHub.Infrastructure.Services;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<EmployeeHubDbContext>(
     options =>
         options.UseSqlServer(
-            builder.Configuration
-            .GetConnectionString("DefaultConnection")));
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlServerOptionsAction: sqlOptions =>
+        {
+            // Aktiviert automatische Wiederholungsversuche bei Fehlern beim Start
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,        // Anzahl der Versuche
+                maxRetryDelay: TimeSpan.FromSeconds(10), // Max. Wartezeit dazwischen
+                errorNumbersToAdd: null);
+        }));
 
 builder.Host.UseSerilog((context, configuration) =>
 {
@@ -70,28 +80,57 @@ builder.Services.AddCors(options =>
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = "http://localhost:8080/realms/employeehub";
+        var authority = builder.Configuration["Authentication:Authority"] ?? "http://localhost:8080/realms/employeehub";
+        var metadataAddress = builder.Configuration["Authentication:MetadataAddress"];
 
-        options.RequireHttpsMetadata = false;
-
+        // Wenn in Docker die MetadataAddress gesetzt wurde, wird sie hier zugewiesen
+        if (!string.IsNullOrEmpty(metadataAddress))
+        {
+            options.MetadataAddress = metadataAddress;
+        }
+        options.Authority = authority;
         options.Audience = "employeehub-api";
+        options.RequireHttpsMetadata = false;
 
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidateAudience = false,
+            ValidIssuer = "http://localhost:8080/realms/employeehub",
+
+            ValidateAudience = true,
+            ValidAudience = "employeehub-api",
+
             NameClaimType = "preferred_username",
-            RoleClaimType = ClaimTypes.Role
+            RoleClaimType = "roles",
         };
         options.Events = new JwtBearerEvents
         {
+            OnAuthenticationFailed = context =>
+            {
+                // Hilft dir beim Debuggen im Docker-Log zu sehen, WARUM es fehlschlägt
+                Console.WriteLine($"Authentication failed: {context.Exception.Message}");
+                return Task.CompletedTask;
+            },
             OnTokenValidated = context =>
             {
                 var identity = context.Principal?.Identity as ClaimsIdentity;
+                if (identity is null) return Task.CompletedTask;
 
-                var realmAccess = context.Principal?
-                    .FindFirst("realm_access")?
-                    .Value;
+                // realm_access Claim auslesen (JSON-String)
+                var realmAccessJson = context.Principal?.FindFirst("realm_access")?.Value;
+                if (!string.IsNullOrEmpty(realmAccessJson))
+                {
+                    using var doc = JsonDocument.Parse(realmAccessJson);
+                    if (doc.RootElement.TryGetProperty("roles", out var roles))
+                    {
+                        foreach (var role in roles.EnumerateArray())
+                        {
+                            identity.AddClaim(new Claim("roles", role.GetString()!));
+                        }
+                    }
+                }
+
+                Console.WriteLine($"Token validated. Roles added: {string.Join(",", identity.Claims.Where(c => c.Type == "roles").Select(c => c.Value))}");
 
                 return Task.CompletedTask;
             }

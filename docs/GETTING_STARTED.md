@@ -59,5 +59,3 @@ dotnet test backend/EmployeeHub.Tests
 ```
 
 ---
-
-Bei Bedarf kann ich die `README.md` weiter ausbauen (z.B. Beispiel-`.env`, Keycloak-Import-Dump, oder CI-Schritte). Sag mir kurz, welche Ergänzungen du möchtest.

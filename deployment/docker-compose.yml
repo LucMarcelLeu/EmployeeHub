@@ -1,4 +1,43 @@
 services:
+  
+  frontend:
+    build:
+      context: ..
+      dockerfile: frontend/Dockerfile
+    image: employeehub-frontend
+    container_name: employeehub-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+    networks:
+      - employeehub-network
+
+  api:
+    build:
+      context: ../backend
+      dockerfile: EmployeeHub.Api/Dockerfile
+    image: employeehub-api
+    container_name: employeehub-api
+    ports:
+      - "5132:5132"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: >
+        Server=sqlserver;
+        Database=EmployeeHub;
+        User Id=sa;
+        Password=${SA_PASSWORD};
+        TrustServerCertificate=True;
+      Authentication__Authority: http://keycloak:8080/realms/employeehub
+      Authentication__MetadataAddress: http://keycloak:8080/realms/employeehub/.well-known/openid-configuration
+
+    depends_on:
+      keycloak:
+        condition: service_started
+
+    networks:
+      - employeehub-network
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -11,6 +50,7 @@ services:
       - "1433:1433"
     volumes:
       - sqlserver-data:/var/opt/mssql
+    
     networks:
       - employeehub-network
 
@@ -40,6 +80,10 @@ services:
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
 
+      KC_HOSTNAME: http://localhost:8080  
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true" 
+      KC_HTTP_ENABLED: "true"
+      
     ports:
       - "8080:8080"
 
