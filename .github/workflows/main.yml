@@ -51,14 +51,14 @@ jobs:
         if: github.event_name != 'pull_request'
         run: |
           docker build \
-            -t ghcr.io/${{ github.repository_owner }}/employeehub-api:latest \
+            -t ghcr.io/lucmarcelleu/employeehub-api:latest \
             -f EmployeeHub.Api/Dockerfile .
 
       - name: Push API Image
         if: github.event_name != 'pull_request'
         run: |
           docker push \
-          ghcr.io/${{ github.repository_owner }}/employeehub-api:latest
+          ghcr.io/lucmarcelleu/employeehub-api:latest
 
   frontend:
     name: Build Frontend
@@ -97,11 +97,11 @@ jobs:
         if: github.event_name != 'pull_request'
         run: |
           docker build \
-          -t ghcr.io/${{ github.repository_owner }}/employeehub-frontend:latest \
+          -t ghcr.io/lucmarcelleu/employeehub-frontend:latest \
           -f Dockerfile .
 
       - name: Push Frontend Image
         if: github.event_name != 'pull_request'
         run: |
           docker push \
-          ghcr.io/${{ github.repository_owner }}/employeehub-frontend:latest
+          ghcr.io/lucmarcelleu/employeehub-frontend:latest
