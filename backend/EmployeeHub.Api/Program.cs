@@ -6,15 +6,18 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.OpenApi;
-using Microsoft.AspNetCore.Authentication;
-using EmployeeHub.Api.Security;
 using EmployeeHub.Application.Departments.Interfaces;
 using EmployeeHub.Infrastructure.Services;
-using Microsoft.IdentityModel.Protocols;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File(
+        "logs/employeehub-.log",
+        rollingInterval: RollingInterval.Day)
+    .CreateBootstrapLogger();
 
 builder.Services.AddDbContext<EmployeeHubDbContext>(
     options =>
@@ -29,12 +32,16 @@ builder.Services.AddDbContext<EmployeeHubDbContext>(
                 errorNumbersToAdd: null);
         }));
 
-builder.Host.UseSerilog((context, configuration) =>
+builder.Host.UseSerilog((context, services, configuration) =>
 {
     configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services)
         .WriteTo.Console()
-        .ReadFrom.Configuration(context.Configuration);
+        .WriteTo.File("logs/employeehub-.log", rollingInterval: RollingInterval.Day);
 });
+
+Log.Information("Die EmployeeHub API startet im Modus: {Env}", builder.Environment.EnvironmentName);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -80,10 +87,9 @@ builder.Services.AddCors(options =>
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        var authority = builder.Configuration["Authentication:Authority"] ?? "http://localhost:8080/realms/employeehub";
+        var authority = builder.Configuration["Authentication:Authority"];
         var metadataAddress = builder.Configuration["Authentication:MetadataAddress"];
 
-        // Wenn in Docker die MetadataAddress gesetzt wurde, wird sie hier zugewiesen
         if (!string.IsNullOrEmpty(metadataAddress))
         {
             options.MetadataAddress = metadataAddress;
@@ -95,9 +101,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidIssuer = "http://localhost:8080/realms/employeehub",
+            ValidIssuer = "http://localhost/auth/realms/employeehub",
 
-            ValidateAudience = true,
+            ValidateAudience = false,
             ValidAudience = "employeehub-api",
 
             NameClaimType = "preferred_username",
@@ -107,8 +113,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             OnAuthenticationFailed = context =>
             {
-                // Hilft dir beim Debuggen im Docker-Log zu sehen, WARUM es fehlschlägt
-                Console.WriteLine($"Authentication failed: {context.Exception.Message}");
+                Log.Information($"Authentication failed: {context.Exception.Message}");
                 return Task.CompletedTask;
             },
             OnTokenValidated = context =>
@@ -130,22 +135,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     }
                 }
 
-                Console.WriteLine($"Token validated. Roles added: {string.Join(",", identity.Claims.Where(c => c.Type == "roles").Select(c => c.Value))}");
+                Log.Information($"Token validated. Roles added: {string.Join(",", identity.Claims.Where(c => c.Type == "roles").Select(c => c.Value))}");
 
                 return Task.CompletedTask;
             }
         };
     });
 builder.Services.AddAuthorization();
-
-builder.Services.AddTransient<IClaimsTransformation, KeycloakRoleClaimsTransformation>();
-
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .WriteTo.File(
-        "logs/employeehub-.log",
-        rollingInterval: RollingInterval.Day)
-    .CreateLogger();
 
 builder.Host.UseSerilog();
 

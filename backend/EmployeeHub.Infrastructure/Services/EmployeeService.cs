@@ -105,16 +105,4 @@ public class EmployeeService : IEmployeeService
 
         return true;
     }
-
-    private static EmployeeDto Map(Employee x)
-    {
-        return new EmployeeDto
-        {
-            Id = x.Id,
-            FirstName = x.FirstName,
-            LastName = x.LastName,
-            Email = x.Email,
-            Department = x.Department != null ? x.Department.Name : null
-        };
-    }
 }

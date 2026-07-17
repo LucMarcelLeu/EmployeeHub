@@ -51,7 +51,7 @@ public class EmployeesController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
     [HttpPut("{id}")]
-    // [Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> Update(Guid id, UpdateEmployeeDto dto)
     {
         var result = await _service.UpdateAsync(id, dto);

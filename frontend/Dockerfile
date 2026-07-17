@@ -13,7 +13,7 @@ RUN npm run build -- --configuration production
 
 FROM nginx:alpine
 
-COPY ./deployment/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
 

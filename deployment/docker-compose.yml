@@ -7,7 +7,7 @@ services:
     image: employeehub-frontend
     container_name: employeehub-frontend
     ports:
-      - "4200:80"
+      - "80"
     depends_on:
       - api
     networks:
@@ -20,7 +20,7 @@ services:
     image: employeehub-api
     container_name: employeehub-api
     ports:
-      - "5132:5132"
+      - "5132"
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__DefaultConnection: >
@@ -29,12 +29,17 @@ services:
         User Id=sa;
         Password=${SA_PASSWORD};
         TrustServerCertificate=True;
-      Authentication__Authority: http://keycloak:8080/realms/employeehub
-      Authentication__MetadataAddress: http://keycloak:8080/realms/employeehub/.well-known/openid-configuration
+      Authentication__Authority: http://keycloak:8080/auth/realms/employeehub
+      Authentication__MetadataAddress: http://keycloak:8080/auth/realms/employeehub/.well-known/openid-configuration
 
     depends_on:
+      sqlserver:
+        condition: service_healthy
       keycloak:
         condition: service_started
+
+    volumes:
+      - ./api-logs:/app/logs
 
     networks:
       - employeehub-network
@@ -42,6 +47,14 @@ services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: employeehub-sqlserver
+
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "${SA_PASSWORD}", "-Q", "SELECT 1", "-C"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s # Gibt dem SQL-Server 10 Sek. Zeit vor dem ersten Test
+
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: ${SA_PASSWORD}
@@ -69,8 +82,8 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:26.2
     container_name: employeehub-keycloak
-    command:
-      - start-dev
+    command: ["start-dev", "--import-realm"]
+
     environment:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
@@ -80,15 +93,36 @@ services:
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
 
-      KC_HOSTNAME: http://localhost:8080  
-      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true" 
       KC_HTTP_ENABLED: "true"
-      
+      KC_HTTP_RELATIVE_PATH: /auth
+      KC_PROXY_HEADERS: xforwarded
+
     ports:
       - "8080:8080"
 
+    volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm.json
+
     depends_on:
       - postgres
+
+    networks:
+      - employeehub-network
+  
+  nginx:
+    image: nginx:alpine
+    container_name: employeehub-nginx
+
+    ports:
+      - "80:80"
+
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+    depends_on:
+      - frontend
+      - api
+      - keycloak
 
     networks:
       - employeehub-network

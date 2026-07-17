@@ -1,6 +1,5 @@
 using EmployeeHub.Application.Departments.DTOs;
 using EmployeeHub.Application.Departments.Interfaces;
-using EmployeeHub.Application.Employees.DTOs;
 using EmployeeHub.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 

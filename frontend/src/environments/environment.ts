@@ -1,8 +1,8 @@
 export const environment = {
     production: false,
-    apiUrl: 'http://localhost:5132/api',
+    apiUrl: 'api',
     keycloak: {
-        url: 'http://localhost:8080',
+        url: window.location.origin + "/auth",
         realm: 'employeehub',
         clientId: 'employeehub-api'
     }
