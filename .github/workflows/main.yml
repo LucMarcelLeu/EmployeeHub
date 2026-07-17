@@ -98,7 +98,7 @@ jobs:
         run: |
           docker build \
           -t ghcr.io/lucmarcelleu/employeehub-frontend:latest \
-          -f Dockerfile .
+          -f frontend/Dockerfile .
 
       - name: Push Frontend Image
         if: github.event_name != 'pull_request'
