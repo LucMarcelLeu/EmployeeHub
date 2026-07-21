@@ -2,28 +2,45 @@
 
     <!-- TOP BAR -->
     <header class="toolbar">
-        <div class="logo">EmployeeHub</div>
+        <span class="logo">EmployeeHub</span>
 
-        <div class="spacer"></div>
+        <span class="spacer"></span>
 
-        <div class="user">
-            👤 {{ username }}
-            <button (click)="logout()">⏻ Logout</button>
+        <div class="user-profile">
+            <span class="username">
+                <span class="material-icons">account_circle</span>
+                {{ username }}
+            </span>
+            <!-- Nutzt die native Material-Button-Optik -->
+            <button mat-button class="logout-btn" (click)="logout()">
+                <span class="material-icons">logout</span>
+                Logout
+            </button>
         </div>
     </header>
 
     <!-- BODY -->
-    <div class="body">
+    <div class="body-container">
 
         <!-- SIDEBAR -->
         <nav class="sidebar">
-            <a routerLink="/dashboard">Dashboard</a>
-            <a routerLink="/employees">Employees</a>
-            <a routerLink="/departments">Departments</a>
+            <!-- routerLinkActive markiert die aktive Seite optisch -->
+            <a routerLink="/dashboard" routerLinkActive="active-link">
+                <span class="material-icons">dashboard</span>
+                Dashboard
+            </a>
+            <a routerLink="/employees" routerLinkActive="active-link">
+                <span class="material-icons">people</span>
+                Employees
+            </a>
+            <a routerLink="/departments" routerLinkActive="active-link">
+                <span class="material-icons">business</span>
+                Departments
+            </a>
         </nav>
 
         <!-- CONTENT -->
-        <main class="content">
+        <main class="content-area">
             <router-outlet></router-outlet>
         </main>
 

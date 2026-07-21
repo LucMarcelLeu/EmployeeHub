@@ -1,21 +1,50 @@
-.dialog-container {
+.dialog-header {
     display: flex;
-    flex-direction: column;
+    align-items: center;
     gap: 16px;
-
-    padding: 24px;
-    /* 🔥 wichtig */
-    box-sizing: border-box;
+    padding-bottom: 8px;
 }
 
-.dialog-title {
+/* Das runde Icon-Badge im M3-Look */
+.icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    /* Nutzen das sanfte Azure-Blau aus dem Theme-Container */
+    background-color: var(--mat-sys-primary-container);
+    color: var(--mat-sys-on-primary-container);
+}
+
+.dialog-header h2 {
     margin: 0;
+    font: var(--mat-sys-headline-small);
+    font-weight: 600;
 }
 
-.dialog-form {
+.department-form {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    padding-top: 8px;
+}
+
+/* Kleiner Hilfetext, damit das Formular nicht so nackt wirkt */
+.form-description {
+    margin: 0 0 8px 0;
+    color: var(--mat-sys-on-surface-variant);
+    font: var(--mat-sys-body-medium);
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+mat-icon[matPrefix] {
+    margin-right: 8px;
+    color: var(--mat-sys-on-surface-variant);
 }
 
 .dialog-actions {

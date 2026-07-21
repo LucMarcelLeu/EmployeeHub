@@ -1,51 +1,65 @@
-<div class="toolbar">
-    <button mat-raised-button color="primary" (click)="openCreate()">
-        + Add Department
+<!-- FILTER- UND AKTIONBAR -->
+<div class="table-toolbar">
+    <button mat-flat-button (click)="openCreate()">
+        <mat-icon>add</mat-icon>
+        Add Department
     </button>
 
-    <mat-form-field>
-        <input matInput placeholder="Search..." (input)="onSearch($event)">
+    <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search departments...</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput (input)="onSearch($event)" placeholder="e.g. Information Technology">
     </mat-form-field>
 </div>
 
-<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+<!-- CONTAINER FÜR DIE TABELLE (M3 Card Look) -->
+<div class="table-container mat-elevation-z1">
+    <table mat-table [dataSource]="dataSource" matSort>
 
-    <!-- ID -->
-    <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef>ID</th>
-        <td mat-cell *matCellDef="let e">{{ e.id }}</td>
-    </ng-container>
+        <!-- ID -->
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef class="col-id">ID</th>
+            <td mat-cell *matCellDef="let e" class="col-id font-mono">{{ e.id }}</td>
+        </ng-container>
 
-    <!-- Department Name -->
-    <ng-container matColumnDef="name">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
-        <td mat-cell *matCellDef="let e">{{ e.name }}</td>
-    </ng-container>
+        <!-- Department Name -->
+        <ng-container matColumnDef="name">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let e" class="font-semibold">{{ e.name }}</td>
+        </ng-container>
 
-    <ng-container matColumnDef="employeeCount">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>Employees</th>
-        <td mat-cell *matCellDef="let e">{{ e.employeeCount }}</td>
-    </ng-container>
+        <!-- Employee Count -->
+        <ng-container matColumnDef="employeeCount">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef class="col-count">Employees</th>
+            <td mat-cell *matCellDef="let e" class="col-count">
+                <!-- Ein dezenter Badge-Look für die Anzahl der Mitarbeiter -->
+                <span class="count-badge">{{ e.employeeCount }}</span>
+            </td>
+        </ng-container>
 
-    <!-- Actions -->
-    <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let department">
-            @if (isAdmin) {
-            <button mat-icon-button (click)="openEdit(department)">
-                <mat-icon>edit</mat-icon>
-            </button>
-            <!-- <button mat-icon-button color="warn" (click)="delete(department)">
-                <mat-icon>delete</mat-icon>
-            </button> -->
-            }
-        </td>
-    </ng-container>
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="col-actions">Actions</th>
+            <td mat-cell *matCellDef="let department" class="col-actions" (click)="$event.stopPropagation()">
+                @if (isAdmin) {
+                <button mat-icon-button type="button" (click)="openEdit(department)" title="Edit">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <!-- Falls du den Delete-Button reaktivierst, ist er hier schon perfekt gestylt -->
+                <!-- 
+                    <button mat-icon-button type="button" class="btn-delete" (click)="delete(department)" title="Delete">
+                        <mat-icon>delete</mat-icon>
+                    </button> 
+                    -->
+                }
+            </td>
+        </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="openEdit(row)"></tr>
 
-</table>
+    </table>
 
-<mat-paginator [pageSize]="10" [pageSizeOptions]="[5,10,25]" showFirstLastButtons>
-</mat-paginator>
+    <mat-paginator [pageSize]="10" [pageSizeOptions]="[5,10,25]" showFirstLastButtons>
+    </mat-paginator>
+</div>

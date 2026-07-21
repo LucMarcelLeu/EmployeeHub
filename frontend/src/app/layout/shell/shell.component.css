@@ -2,42 +2,124 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
-    font-family: Arial, sans-serif;
 }
 
+/* TOP BAR OPTIMIERUNG */
 .toolbar {
-    height: 50px;
+    height: 64px;
+    /* Von 50px erhöht für mehr Atemraum */
     display: flex;
     align-items: center;
-    padding: 0 16px;
-    background: #1976d2;
-    color: white;
+    padding: 0 24px;
+    /* Nutzt die primäre Azure-Farbe Ihres Themes */
+    background-color: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+    box-shadow: var(--mat-sys-level2);
+    /* Sanfter Schattenwurf */
+    z-index: 10;
+}
+
+.logo {
+    font: var(--mat-sys-title-large);
+    /* Grössere, moderne Schrift */
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
 .spacer {
     flex: 1;
 }
 
-.body {
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.username {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font: var(--mat-sys-body-large);
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: inherit;
+    /* Nutzt Textfarbe der Toolbar */
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 8px;
+    padding: 6px 12px;
+    background: transparent;
+    cursor: pointer;
+    font: var(--mat-sys-label-large);
+    transition: background 0.2s;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* BODY & SIDEBAR OPTIMIERUNG */
+.body-container {
     flex: 1;
     display: flex;
+    overflow: hidden;
 }
 
 .sidebar {
-    width: 200px;
-    background: #f4f4f4;
-    padding: 10px;
+    width: 260px;
+    /* Breiter für bessere Lesbarkeit */
+    /* Dezentes Grau/Blau aus dem Theme-Hintergrund */
+    background-color: var(--mat-sys-surface-container-low);
+    padding: 24px 16px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
+    border-right: 1px solid var(--mat-sys-outline-variant);
 }
 
 .sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     text-decoration: none;
-    color: black;
+    color: var(--mat-sys-on-surface);
+    font: var(--mat-sys-title-small);
+    /* Deutlich grösser als vorher */
+    padding: 12px 16px;
+    border-radius: 12px;
+    /* Abgerundete Ecken im M3-Look */
+    transition: all 0.2s ease;
 }
 
-.content {
+.sidebar a .material-icons {
+    color: var(--mat-sys-on-surface-variant);
+}
+
+/* Hover-Effekt */
+.sidebar a:hover {
+    background-color: var(--mat-sys-surface-container-high);
+}
+
+/* Aktiver Navigationspunkt (Azure-Blau hinterlegt) */
+.sidebar a.active-link {
+    background-color: var(--mat-sys-primary-container);
+    color: var(--mat-sys-on-primary-container);
+    font-weight: 600;
+}
+
+.sidebar a.active-link .material-icons {
+    color: var(--mat-sys-on-primary-container);
+}
+
+/* INHALTSBEREICH */
+.content-area {
     flex: 1;
-    padding: 16px;
+    padding: 32px;
+    /* Mehr Platz zu den Rändern */
+    background-color: var(--mat-sys-surface);
+    overflow-y: auto;
 }

@@ -1,10 +1,12 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 import { DepartmentService } from './services/department.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NotificationService } from '../../core/services/notification.service';
@@ -18,7 +20,11 @@ import { Department } from './models/department';
         ReactiveFormsModule,
         MatFormFieldModule,
         MatSelectModule,
-        MatInputModule],
+        MatInputModule,
+        MatDialogContent,
+        MatIconModule,
+        MatDialogActions,
+        MatButtonModule],
     templateUrl: './department-form.component.html',
     styleUrl: './department-form.component.css'
 })

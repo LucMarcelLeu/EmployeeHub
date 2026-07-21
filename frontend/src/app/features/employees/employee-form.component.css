@@ -1,26 +1,29 @@
-.dialog-container {
+.employee-form {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-
-    padding: 24px;
-    /* 🔥 wichtig */
-    box-sizing: border-box;
+    gap: 12px;
+    /* Bringt den nötigen Abstand zwischen den Titel und das erste Feld */
+    padding-top: 16px;
 }
 
-.dialog-title {
-    margin: 0;
-}
-
-.dialog-form {
-    display: flex;
-    flex-direction: column;
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 16px;
 }
 
-.dialog-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    margin-top: 16px;
+mat-form-field {
+    width: 100%;
+}
+
+mat-icon[matPrefix] {
+    margin-right: 8px;
+    color: var(--mat-sys-on-surface-variant);
+}
+
+@media (max-width: 480px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
 }
