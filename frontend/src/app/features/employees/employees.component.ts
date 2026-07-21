@@ -58,7 +58,6 @@ export class EmployeesComponent implements OnInit, AfterViewInit {
     error = '';
 
     displayedColumns: string[] = [
-        'id',
         'firstName',
         'lastName',
         'email',

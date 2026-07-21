@@ -58,7 +58,6 @@ export class DepartmentsComponent implements OnInit, AfterViewInit {
     error = '';
 
     displayedColumns: string[] = [
-        'id',
         'name',
         'actions'
     ];
