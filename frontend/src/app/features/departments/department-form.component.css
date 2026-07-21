@@ -1,0 +1,26 @@
+.dialog-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    padding: 24px;
+    /* 🔥 wichtig */
+    box-sizing: border-box;
+}
+
+.dialog-title {
+    margin: 0;
+}
+
+.dialog-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 16px;
+}

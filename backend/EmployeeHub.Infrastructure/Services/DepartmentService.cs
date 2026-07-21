@@ -1,5 +1,6 @@
 using EmployeeHub.Application.Departments.DTOs;
 using EmployeeHub.Application.Departments.Interfaces;
+using EmployeeHub.Domain.Entities;
 using EmployeeHub.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,19 +29,47 @@ public class DepartmentService : IDepartmentService
             .ToListAsync();
     }
 
-    public Task<DepartmentDto?> GetByIdAsync(Guid id)
+    public async Task<DepartmentDto?> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        return await _context.Departments
+            .Include(x => x.Employees)
+            .AsNoTracking()
+            .Where(x => x.Id == id)
+            .Select(x => new DepartmentDto
+            {
+                Id = x.Id,
+                Name = x.Name,
+                EmployeeCount = x.Employees.Count
+            })
+            .FirstOrDefaultAsync();
     }
 
-    public Task<DepartmentDto> CreateAsync(CreateDepartmentDto dto)
+    public async Task<DepartmentDto> CreateAsync(CreateDepartmentDto dto)
     {
-        throw new NotImplementedException();
+        var department = new Department
+        {
+            Id = Guid.NewGuid(),
+            Name = dto.Name
+        };
+
+        _context.Departments.Add(department);
+        await _context.SaveChangesAsync();
+
+        return (await GetByIdAsync(department.Id))!;
     }
 
-    public Task<DepartmentDto?> UpdateAsync(Guid id, UpdateDepartmentDto dto)
+    public async Task<DepartmentDto?> UpdateAsync(Guid id, UpdateDepartmentDto dto)
     {
-        throw new NotImplementedException();
+        var department = await _context.Departments.FindAsync(id);
+
+        if (department == null)
+            return null;
+
+        department.Name = dto.Name;
+
+        await _context.SaveChangesAsync();
+
+        return await GetByIdAsync(id);
     }
 
     public Task<bool> DeleteAsync(Guid id)

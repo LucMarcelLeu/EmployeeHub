@@ -75,10 +75,9 @@ services:
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - /Volumes/Development/Database/Postgres2:/var/lib/postgresql/data
     networks:
       - employeehub-network
-
   keycloak:
     image: quay.io/keycloak/keycloak:26.2
     container_name: employeehub-keycloak
