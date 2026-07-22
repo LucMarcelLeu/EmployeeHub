@@ -61,6 +61,8 @@ export class EmployeesComponent implements OnInit, AfterViewInit {
         'firstName',
         'lastName',
         'email',
+        'entryDate',
+        'exitDate',
         'actions'
     ];
 

@@ -2,7 +2,6 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    /* Bringt den nötigen Abstand zwischen den Titel und das erste Feld */
     padding-top: 16px;
 }
 
@@ -10,6 +9,10 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
+}
+
+.form-grid--compact {
+    margin-top: 4px;
 }
 
 mat-form-field {
