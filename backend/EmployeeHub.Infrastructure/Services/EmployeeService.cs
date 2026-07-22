@@ -37,6 +37,8 @@ public class EmployeeService : IEmployeeService
                 FirstName = x.FirstName,
                 LastName = x.LastName,
                 Email = x.Email,
+                EntryDate = x.EntryDate,
+                ExitDate = x.ExitDate,
                 DepartmentId = x.DepartmentId,
                 Department = x.Department != null ? x.Department.Name : null,
                 Skills = x.Skills
@@ -65,6 +67,8 @@ public class EmployeeService : IEmployeeService
                 FirstName = x.FirstName,
                 LastName = x.LastName,
                 Email = x.Email,
+                EntryDate = x.EntryDate,
+                ExitDate = x.ExitDate,
                 DepartmentId = x.DepartmentId,
                 Department = x.Department != null ? x.Department.Name : null,
                 Skills = x.Skills
@@ -87,6 +91,8 @@ public class EmployeeService : IEmployeeService
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             Email = dto.Email,
+            EntryDate = dto.EntryDate,
+            ExitDate = dto.ExitDate,
             DepartmentId = dto.DepartmentId
         };
 
@@ -123,6 +129,8 @@ public class EmployeeService : IEmployeeService
         employee.FirstName = dto.FirstName;
         employee.LastName = dto.LastName;
         employee.Email = dto.Email;
+        employee.EntryDate = dto.EntryDate;
+        employee.ExitDate = dto.ExitDate;
         employee.DepartmentId = dto.DepartmentId;
 
         var skillIds = dto.SkillIds.Distinct().ToList();

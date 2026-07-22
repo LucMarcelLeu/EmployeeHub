@@ -9,6 +9,8 @@ export interface Employee {
     firstName: string;
     lastName: string;
     email: string;
+    entryDate?: string | null;
+    exitDate?: string | null;
     departmentId?: string | null;
     department?: string | null;
     skills?: EmployeeSkill[];

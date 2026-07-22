@@ -52,6 +52,8 @@ export class EmployeeFormComponent implements OnInit {
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
+        entryDate: this.fb.control<string | null>(null),
+        exitDate: this.fb.control<string | null>(null),
         departmentId: this.fb.control<string | null>(null),
         skillIds: this.fb.control<string[]>([], { nonNullable: true })
     });
@@ -75,6 +77,8 @@ export class EmployeeFormComponent implements OnInit {
             firstName: this.employee.firstName,
             lastName: this.employee.lastName,
             email: this.employee.email,
+            entryDate: this.employee.entryDate ?? null,
+            exitDate: this.employee.exitDate ?? null,
             departmentId: this.employee.departmentId ?? null,
             skillIds: this.employee.skills?.map(x => x.skillId) ?? []
         });

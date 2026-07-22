@@ -17,6 +17,10 @@ public class UpdateEmployeeDto
     [MaxLength(100)]
     public string Email { get; set; } = "";
 
+    public DateOnly? EntryDate { get; set; }
+
+    public DateOnly? ExitDate { get; set; }
+
     public Guid? DepartmentId { get; set; }
 
     public List<Guid> SkillIds { get; set; } = new();
