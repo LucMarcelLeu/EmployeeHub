@@ -54,7 +54,7 @@ export class EmployeesComponent implements OnInit, AfterViewInit {
     isAdmin = this.auth.isAdmin;
 
     dataSource = new MatTableDataSource<Employee>();
-    loading = false;
+
     error = '';
 
     displayedColumns: string[] = [
@@ -75,7 +75,6 @@ export class EmployeesComponent implements OnInit, AfterViewInit {
     }
 
     load() {
-        this.loading = true;
         this.error = '';
 
         this.service.getAll()
