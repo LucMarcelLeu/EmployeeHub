@@ -18,4 +18,6 @@ public class CreateEmployeeDto
     public string Email { get; set; } = "";
 
     public Guid? DepartmentId { get; set; }
+
+    public List<Guid> SkillIds { get; set; } = new();
 }

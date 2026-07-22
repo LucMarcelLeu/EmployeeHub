@@ -1,14 +1,25 @@
 @if (employee) {
-    <div>
+<div>
 
-        <h2>{{ employee.firstName }} {{ employee.lastName }}</h2>
+    <h2>{{ employee.firstName }} {{ employee.lastName }}</h2>
 
-        <p><b>ID:</b> {{ employee.id }}</p>
-        <p><b>Email:</b> {{ employee.email }}</p>
+    <p><b>ID:</b> {{ employee.id }}</p>
+    <p><b>Email:</b> {{ employee.email }}</p>
 
-        <p><b>Department:</b> {{ employee.department }}</p>
+    <p><b>Department:</b> {{ employee.department }}</p>
 
-    </div>
+    <p><b>Skills:</b></p>
+    @if (employee.skills?.length) {
+    <ul>
+        @for (skill of employee.skills; track skill.skillId) {
+        <li>{{ skill.skillName }}</li>
+        }
+    </ul>
+    } @else {
+    <p>No skills assigned.</p>
+    }
+
+</div>
 } @else {
-    <p>Loading...</p>
+<p>Loading...</p>
 }

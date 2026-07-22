@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.OpenApi;
 using EmployeeHub.Application.Departments.Interfaces;
+using EmployeeHub.Application.Skills.Interfaces;
 using EmployeeHub.Infrastructure.Services;
 using System.Text.Json;
 
@@ -71,6 +72,7 @@ builder.Services.AddHealthChecks();
 
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<ISkillService, SkillService>();
 
 builder.Services.AddCors(options =>
 {

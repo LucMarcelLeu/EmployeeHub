@@ -83,6 +83,69 @@ public class EmployeeServiceTests
     }
 
     [Fact]
+    public async Task GetByIdAsync_ShouldIncludeSkills_WhenEmployeeHasSkills()
+    {
+        // Arrange
+        await using var context = TestDbContextFactory.Create();
+
+        var employeeId = Guid.NewGuid();
+        var csharpId = Guid.NewGuid();
+        var dotnetId = Guid.NewGuid();
+
+        var employee = new Domain.Entities.Employee
+        {
+            Id = employeeId,
+            FirstName = "Max",
+            LastName = "Nice",
+            Email = "max@test.ch"
+        };
+
+        context.Skills.AddRange(
+            new Domain.Entities.Skill
+            {
+                Id = csharpId,
+                Name = "C#"
+            },
+            new Domain.Entities.Skill
+            {
+                Id = dotnetId,
+                Name = ".NET"
+            });
+
+        context.Employees.Add(employee);
+        await context.SaveChangesAsync();
+
+        context.Entry(employee)
+            .Collection(x => x.Skills)
+            .Load();
+
+        employee.Skills.Add(new Domain.Entities.EmployeeSkill
+        {
+            EmployeeId = employeeId,
+            SkillId = csharpId
+        });
+
+        employee.Skills.Add(new Domain.Entities.EmployeeSkill
+        {
+            EmployeeId = employeeId,
+            SkillId = dotnetId
+        });
+
+        await context.SaveChangesAsync();
+
+        var service = new EmployeeService(context);
+
+        // Act
+        var result = await service.GetByIdAsync(employeeId);
+
+        // Assert
+        result.Should().NotBeNull();
+        result!.Skills.Should().HaveCount(2);
+        result.Skills.Should().Contain(x => x.SkillId == csharpId);
+        result.Skills.Should().Contain(x => x.SkillId == dotnetId);
+    }
+
+    [Fact]
     public async Task GetAllAsync_ShouldReturnAllEmployees()
     {
         // Arrange

@@ -8,4 +8,5 @@ public class EmployeeDto
     public string Email { get; set; } = "";
     public Guid? DepartmentId { get; set; }
     public string? Department { get; set; }
+    public List<EmployeeSkillDto> Skills { get; set; } = new();
 }

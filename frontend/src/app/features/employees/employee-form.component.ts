@@ -14,6 +14,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NotificationService } from '../../core/services/notification.service';
 import { Department } from '../departments/models/department';
 import { DepartmentService } from '../departments/services/department.service';
+import { Skill } from '../../shared/models/skill.model';
 
 @Component({
     selector: 'app-employee-form',
@@ -29,7 +30,7 @@ import { DepartmentService } from '../departments/services/department.service';
         MatDialogModule,
         MatButtonModule,
         MatIconModule
-        ],
+    ],
     templateUrl: './employee-form.component.html',
     styleUrl: './employee-form.component.css'
 })
@@ -45,18 +46,24 @@ export class EmployeeFormComponent implements OnInit {
 
     isEditMode = false;
     departments: Department[] = [];
+    skills: Skill[] = [];
 
     readonly form = this.fb.nonNullable.group({
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
-        departmentId: this.fb.control<string | null>(null)
+        departmentId: this.fb.control<string | null>(null),
+        skillIds: this.fb.control<string[]>([], { nonNullable: true })
     });
 
     ngOnInit(): void {
 
         this.departmentService.getAll().subscribe({
             next: departments => this.departments = departments
+        });
+
+        this.service.getSkills().subscribe({
+            next: skills => this.skills = skills
         });
 
         if (!this.employee) {
@@ -68,7 +75,8 @@ export class EmployeeFormComponent implements OnInit {
             firstName: this.employee.firstName,
             lastName: this.employee.lastName,
             email: this.employee.email,
-            departmentId: this.employee.departmentId ?? null
+            departmentId: this.employee.departmentId ?? null,
+            skillIds: this.employee.skills?.map(x => x.skillId) ?? []
         });
     }
 

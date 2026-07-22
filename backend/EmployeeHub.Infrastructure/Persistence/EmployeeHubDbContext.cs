@@ -14,6 +14,7 @@ public class EmployeeHubDbContext : DbContext
     public DbSet<Employee> Employees => Set<Employee>();
     public DbSet<Department> Departments => Set<Department>();
     public DbSet<Skill> Skills => Set<Skill>();
+    public DbSet<EmployeeSkill> EmployeeSkills => Set<EmployeeSkill>();
 
     protected override void OnModelCreating(
         ModelBuilder builder)
@@ -26,5 +27,15 @@ public class EmployeeHubDbContext : DbContext
                 x.EmployeeId,
                 x.SkillId
             });
+
+        builder.Entity<EmployeeSkill>()
+            .HasOne(x => x.Employee)
+            .WithMany(x => x.Skills)
+            .HasForeignKey(x => x.EmployeeId);
+
+        builder.Entity<EmployeeSkill>()
+            .HasOne(x => x.Skill)
+            .WithMany()
+            .HasForeignKey(x => x.SkillId);
     }
 }

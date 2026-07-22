@@ -35,6 +35,18 @@
             </mat-select>
         </mat-form-field>
 
+        <mat-form-field appearance="outline">
+            <mat-label>Skills</mat-label>
+            <mat-icon matPrefix>psychology</mat-icon>
+            <mat-select formControlName="skillIds" multiple>
+                @for (skill of skills; track skill.id) {
+                <mat-option [value]="skill.id">
+                    {{ skill.name }}
+                </mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+
     </form>
 </mat-dialog-content>
 

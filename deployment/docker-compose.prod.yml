@@ -1,0 +1,119 @@
+services:
+
+  nginx:
+    image: nginx:alpine
+    container_name: employeehub-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - frontend
+      - api
+      - keycloak
+    networks:
+      - employeehub-network
+
+  frontend:
+    image: ghcr.io/lucmarcelleu/employeehub-frontend:latest
+    container_name: employeehub-frontend
+    restart: unless-stopped
+    networks:
+      - employeehub-network
+
+  api:
+    image: ghcr.io/lucmarcelleu/employeehub-api:latest
+    container_name: employeehub-api
+    restart: unless-stopped
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+
+      ConnectionStrings__DefaultConnection: >
+        Server=sqlserver;
+        Database=EmployeeHub;
+        User Id=sa;
+        Password=${SA_PASSWORD};
+        TrustServerCertificate=True;
+
+      Authentication__Authority: http://keycloak/auth/realms/employeehub
+      Authentication__MetadataAddress: http://keycloak:8080/auth/realms/employeehub/.well-known/openid-configuration
+
+    depends_on:
+      - sqlserver
+      - keycloak
+
+    networks:
+      - employeehub-network
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: employeehub-sqlserver
+    restart: unless-stopped
+
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${SA_PASSWORD}
+
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+
+    networks:
+      - employeehub-network
+
+  postgres:
+    image: postgres:16
+    container_name: employeehub-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+    networks:
+      - employeehub-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.2
+    container_name: employeehub-keycloak
+    restart: unless-stopped
+
+    command:
+      - start
+      - --import-realm
+
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+
+      KC_HTTP_ENABLED: "true"
+      KC_HTTP_RELATIVE_PATH: /auth
+      KC_PROXY_HEADERS: xforwarded
+
+      # Später auf deine Domain ändern
+      KC_HOSTNAME: employeehub.deinedomain.ch
+
+    volumes:
+      - ./deployment/keycloak/realm-export.json:/opt/keycloak/data/import/realm.json:ro
+
+    depends_on:
+      - postgres
+
+    networks:
+      - employeehub-network
+
+volumes:
+  sqlserver-data:
+  postgres-data:
+
+networks:
+  employeehub-network:

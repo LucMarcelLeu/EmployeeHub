@@ -167,6 +167,7 @@ cd EmployeeHub
 ## Start Application
 
 ```bash
+cd deployment 
 docker compose up -d
 ```
 
