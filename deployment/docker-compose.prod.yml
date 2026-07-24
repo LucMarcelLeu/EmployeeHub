@@ -38,10 +38,13 @@ services:
 
       Authentication__Authority: http://keycloak/auth/realms/employeehub
       Authentication__MetadataAddress: http://keycloak:8080/auth/realms/employeehub/.well-known/openid-configuration
+      Ollama__Endpoint: http://ollama:11434/api/chat
+      Ollama__Model: llama3.2
 
     depends_on:
       - sqlserver
       - keycloak
+      - ollama
 
     networks:
       - employeehub-network
@@ -76,6 +79,19 @@ services:
 
     networks:
       - employeehub-network
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: employeehub-ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    networks:
+      - employeehub-network
+    environment:
+      - OLLAMA_KEEP_ALIVE=-1
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.2
@@ -114,6 +130,7 @@ services:
 volumes:
   sqlserver-data:
   postgres-data:
+  ollama-data:
 
 networks:
   employeehub-network:

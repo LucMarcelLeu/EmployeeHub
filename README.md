@@ -55,6 +55,8 @@ graph TD
 
     API --> Keycloak[Keycloak]
 
+    API --> Ollama
+
     Keycloak --> PostgreSQL[(PostgreSQL)]
 ```
 
@@ -273,6 +275,24 @@ Planned improvements:
 EmployeeHub was created as a reference project to demonstrate modern software development practices using .NET, Angular, Docker and OpenID Connect.
 
 The goal is to build a realistic full-stack application while focusing on clean architecture, maintainability, security and automated deployment.
+
+---
+
+## 🤖 AI Assistant
+
+EmployeeHub includes an optional local AI assistant powered by Ollama.
+
+Features
+
+- Local LLM execution
+- No cloud dependency
+- Employee profile summaries
+- Context-aware prompting
+- Graceful fallback if AI is unavailable
+
+After start of docker-compose.yml
+- docker exec -it employeehub-ollama ollama pull llama3.2
+- curl http://localhost:11434/api/chat -d '{"model": "llama3.2"}'
 
 ---
 

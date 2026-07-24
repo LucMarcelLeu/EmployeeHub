@@ -10,6 +10,7 @@ using EmployeeHub.Application.Departments.Interfaces;
 using EmployeeHub.Application.Skills.Interfaces;
 using EmployeeHub.Infrastructure.Services;
 using System.Text.Json;
+using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,6 +70,12 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddHealthChecks();
+
+builder.Services.AddHttpClient<IOllamaChatService, OllamaChatService>(client =>
+{
+    client.Timeout = TimeSpan.FromMinutes(5);
+    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+});
 
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();

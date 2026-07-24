@@ -41,4 +41,22 @@ export class EmployeeService {
     getSkills(): Observable<Skill[]> {
         return this.http.get<Skill[]>(this.skillsUrl);
     }
+
+    askAiSummary(id: string, prompt: string): Observable<{
+        answer: string;
+        summary: string;
+        name: string;
+        department: string;
+        skills: string;
+        email: string;
+    }> {
+        return this.http.post<{
+            answer: string;
+            summary: string;
+            name: string;
+            department: string;
+            skills: string;
+            email: string;
+        }>(`${this.baseUrl}/${id}/ai-summary`, { prompt });
+    }
 }

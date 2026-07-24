@@ -1,5 +1,5 @@
 @if (employee) {
-<div>
+<div class="detail-card">
 
     <h2>{{ employee.firstName }} {{ employee.lastName }}</h2>
 
@@ -21,6 +21,30 @@
     } @else {
     <p>No skills assigned.</p>
     }
+
+    <div class="ai-panel">
+        <label for="aiPrompt">AI summary prompt</label>
+        <textarea id="aiPrompt" [(ngModel)]="aiPrompt" rows="4"></textarea>
+
+        <button type="button" (click)="askAiSummary()" [disabled]="aiLoading">
+            {{ aiLoading ? 'Loading...' : 'Generate AI summary' }}
+        </button>
+
+        @if (aiSummary.summary || aiAnswer) {
+        <div class="ai-answer">
+            <strong>AI Summary</strong>
+
+            <div class="ai-summary-grid">
+                <div><b>Name:</b> {{ aiSummary.name || employee.firstName + ' ' + employee.lastName }}</div>
+                <div><b>Department:</b> {{ aiSummary.department || employee.department || '—' }}</div>
+                <div><b>Skills:</b> {{ aiSummary.skills || getSkillSummary() }}</div>
+                <div><b>Email:</b> {{ aiSummary.email || employee.email }}</div>
+            </div>
+
+            <p>{{ aiSummary.summary }}</p>
+        </div>
+        }
+    </div>
 
 </div>
 } @else {

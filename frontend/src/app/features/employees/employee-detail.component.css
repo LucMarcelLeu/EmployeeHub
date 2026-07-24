@@ -1,0 +1,40 @@
+.detail-card {
+    display: grid;
+    gap: 1rem;
+    max-width: 720px;
+    padding: 1rem;
+}
+
+.ai-panel {
+    display: grid;
+    gap: 0.75rem;
+    background: var(--mat-sys-surface-container-low);
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+textarea {
+    width: 100%;
+    resize: vertical;
+    min-height: 90px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    padding: 0.75rem;
+    font: inherit;
+}
+
+button {
+    width: fit-content;
+    padding: 0.65rem 1rem;
+    border-radius: 999px;
+    border: none;
+    background: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+    cursor: pointer;
+}
+
+.ai-answer {
+    background: var(--mat-sys-surface-container-high);
+    border-radius: 8px;
+    padding: 0.75rem;
+}
